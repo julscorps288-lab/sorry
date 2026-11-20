@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07030d" />
+  <title>Happy 3rd Monthsary, Jasmine Rose 💖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Dancing+Script:wght@700&family=Great+Vibes&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Galaxy Background -->
+  <div id="canvas-container" aria-hidden="true"></div>
+  <div class="vignette"></div>
+
+  <main class="stage">
+    <!-- 1) Picture letters: HAPPY 3RD MONTHSARY -->
+    <h1 class="photo-title" id="photoTitle" aria-label="Happy 3rd Monthsary"></h1>
+
+    <!-- 2) Drawing Heart with video inside -->
+    <div class="heart-wrap" id="heartWrap">
+      <div class="heart-media" id="heartMedia">
+        <canvas id="heartBg" class="heart-bg" width="400" height="360"></canvas>
+        <div class="heart-tint"></div>
+        <video id="heartVideo" class="heart-video" muted loop playsinline preload="auto"></video>
+      </div>
+      <svg id="heartSvg" viewBox="0 0 200 180" aria-hidden="true">
+        <defs>
+          <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff7597" />
+            <stop offset="55%" stop-color="#ff2a66" />
+            <stop offset="100%" stop-color="#c2003a" />
+          </linearGradient>
+          <radialGradient id="innerGlow" cx="50%" cy="45%" r="62%">
+            <stop offset="70%" stop-color="#ff2a66" stop-opacity="0" />
+            <stop offset="100%" stop-color="#ff2a66" stop-opacity="0.55" />
+          </radialGradient>
+          <linearGradient id="numGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff9e6" />
+            <stop offset="55%" stop-color="#ffe08a" />
+            <stop offset="100%" stop-color="#ffb84d" />
+          </linearGradient>
+          <filter id="glow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="3" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <path id="heartFill"
+          d="M100 38 C92 18 75 6 55 6 C28 6 6 26 6 56 C6 92 42 128 100 170 C158 128 194 92 194 56 C194 26 172 6 145 6 C125 6 108 18 100 38 Z" />
+        <path id="heartShade"
+          d="M100 38 C92 18 75 6 55 6 C28 6 6 26 6 56 C6 92 42 128 100 170 C158 128 194 92 194 56 C194 26 172 6 145 6 C125 6 108 18 100 38 Z" />
+        <text id="heartNumber" class="heart-num" x="100" y="90" text-anchor="middle"
+          dominant-baseline="central">21</text>
+        <path id="leftHalf" class="heart-line" d="M100 38 C92 18 75 6 55 6 C28 6 6 26 6 56 C6 92 42 128 100 170" />
+        <path id="rightHalf" class="heart-line"
+          d="M100 38 C108 18 125 6 145 6 C172 6 194 26 194 56 C194 92 158 128 100 170" />
+        <circle id="penL" class="pen" r="3.5" />
+        <circle id="penR" class="pen" r="3.5" />
+      </svg>
+    </div>
+
+    <!-- 3) I Love You (draws together with the heart) -->
+    <svg id="loveText" class="script" viewBox="0 0 560 120" aria-label="I Love You">
+      <text x="50%" y="90" text-anchor="middle">I Love You</text>
+    </svg>
+
+    <!-- 4) Name (writes after the heart) -->
+    <div class="name-wrap">
+      <svg id="nameText" class="script" viewBox="0 0 760 100" aria-label="Jasmine Rose Jotojot">
+        <text x="50%" y="72" text-anchor="middle">Jasmine Rose Jotojot</text>
+      </svg>
+      <div class="underline" id="underline"></div>
+      <button type="button" class="tap-btn" id="tapBtn">Tap here</button>
+    </div>
+  </main>
+
+  <div class="hint" id="hint">tap anywhere to play again 💖</div>
+  <div id="gameOverlay" aria-label="Mini game">
+    <canvas id="gameCanvas"></canvas>
+    <div id="ldControls" class="ld-controls" aria-label="Touch controls">
+      <div class="ld-dpad">
+        <button type="button" class="ld-btn" id="ldLeftBtn" aria-label="Move left">◀</button>
+        <button type="button" class="ld-btn" id="ldRightBtn" aria-label="Move right">▶</button>
+      </div>
+      <button type="button" class="ld-btn ld-btn-jump" id="ldJumpBtn" aria-label="Jump">▲</button>
+    </div>
+    <div class="game-win-banner" id="gameWinBanner">
+      <div class="win-love">I LOVE YOU!</div>
+    </div>
+  </div>
+  <dialog id="gameOverDialog" class="game-over-dialog" aria-labelledby="gameOverTitle">
+    <h2 id="gameOverTitle" class="game-over-title">Out of Lives 💔</h2>
+    <p class="game-over-sub">Don't give up — save her! 💖</p>
+    <form method="dialog" class="game-over-actions">
+      <button type="submit" value="retry" class="game-over-btn" autofocus>↺ Try Again</button>
+      <button type="submit" value="home" class="game-over-btn-secondary">Back to Intro</button>
+    </form>
+  </dialog>
+  <dialog id="galaxyQuizDialog" class="game-over-dialog galaxy-quiz-dialog" aria-labelledby="quizQuestionText">
+    <div class="quiz-topbar">
+      <span class="quiz-step" id="quizStepLabel">Question 1 of 3</span>
+      <span class="quiz-timer" id="quizTimerLabel">⏱️ 15.0s</span>
+    </div>
+    <h2 id="quizQuestionText" class="quiz-question">What is Sebastian's favorite color?</h2>
+    <p class="quiz-hint" id="quizHint">Pick 2 colors only</p>
+
+    <div id="quizStep1" class="quiz-step-body">
+      <div class="quiz-color-grid" id="quizColorGrid">
+        <button type="button" class="quiz-color-btn" data-color="red"><span class="swatch"></span>Red</button>
+        <button type="button" class="quiz-color-btn" data-color="orange"><span class="swatch"></span>Orange</button>
+        <button type="button" class="quiz-color-btn" data-color="yellow"><span class="swatch"></span>Yellow</button>
+        <button type="button" class="quiz-color-btn" data-color="green"><span class="swatch"></span>Green</button>
+        <button type="button" class="quiz-color-btn" data-color="blue"><span class="swatch"></span>Blue</button>
+        <button type="button" class="quiz-color-btn" data-color="indigo"><span class="swatch"></span>Indigo</button>
+        <button type="button" class="quiz-color-btn" data-color="violet"><span class="swatch"></span>Violet</button>
+        <button type="button" class="quiz-color-btn" data-color="black"><span class="swatch"></span>Black</button>
+      </div>
+    </div>
+
+    <div id="quizStep2" class="quiz-step-body" hidden>
+      <div class="quiz-date-row">
+        <select id="quizMonth" class="quiz-input" aria-label="Month">
+          <option value="">Month</option>
+          <option value="January">January</option>
+          <option value="February">February</option>
+          <option value="March">March</option>
+          <option value="April">April</option>
+          <option value="May">May</option>
+          <option value="June">June</option>
+          <option value="July">July</option>
+          <option value="August">August</option>
+          <option value="September">September</option>
+          <option value="October">October</option>
+          <option value="November">November</option>
+          <option value="December">December</option>
+        </select>
+        <input id="quizDay" type="number" min="1" max="31" inputmode="numeric" class="quiz-input quiz-num" placeholder="Day" aria-label="Day" />
+        <input id="quizYear" type="number" min="2020" max="2030" inputmode="numeric" class="quiz-input quiz-num-yr" placeholder="Year" aria-label="Year" />
+      </div>
+    </div>
+
+    <div id="quizStep3" class="quiz-step-body" hidden>
+      <div class="quiz-time-row">
+        <label class="quiz-time-field"><input id="quizHr" type="number" min="0" max="99" inputmode="numeric" class="quiz-input quiz-num" placeholder="00" /><span>hr</span></label>
+        <label class="quiz-time-field"><input id="quizMin" type="number" min="0" max="59" inputmode="numeric" class="quiz-input quiz-num" placeholder="00" /><span>min</span></label>
+        <label class="quiz-time-field"><input id="quizSec" type="number" min="0" max="59" inputmode="numeric" class="quiz-input quiz-num" placeholder="00" /><span>sec</span></label>
+      </div>
+    </div>
+
+    <div id="quizPunishmentStep" class="quiz-step-body" hidden>
+      <div class="quiz-punish-grid" id="quizPunishGrid">
+        <button type="button" class="quiz-punish-btn" data-game="leveldevil">😈 Level Devil<span>Reach the 💖 door</span></button>
+        <button type="button" class="quiz-punish-btn" data-game="dino">🦖 Dino Runner<span>Survive 10 asteroids</span></button>
+        <button type="button" class="quiz-punish-btn" data-game="shooter">💘 Heart Shooter<span>Rescue &amp; draw heart</span></button>
+        <button type="button" class="quiz-punish-btn" data-game="spaceship">🚀 Spaceship Dodge<span>Survive 30s in space</span></button>
+      </div>
+    </div>
+
+    <p class="quiz-error" id="quizError" aria-live="polite"></p>
+    <div class="game-over-actions">
+      <button type="button" id="quizNextBtn" class="game-over-btn">Next →</button>
+    </div>
+  </dialog>
+  <div id="galaxyMemories" class="galaxy-memories" aria-hidden="true">
+    <div id="memRow" class="mem-row"></div>
+    <div class="mem-vignette"></div>
+  </div>
+  <canvas id="galaxyCanvas" aria-hidden="true"></canvas>
+  <div class="galaxy-header" id="galaxyHeader">
+    <h2 class="photo-title galaxy-title" id="galaxyTitle" aria-label="I Love You So Much Ga"></h2>
+    <p class="galaxy-subtitle" id="galaxySubtitle">Jasmine Rose Jotojot</p>
+  </div>
+  <audio id="galaxyAudio" src="yakapmo.m4a" preload="auto" loop></audio>
+  <button type="button" class="again-btn" id="againBtn">↺ Play again</button>
+  <button type="button" class="sound-btn" id="soundBtn" aria-label="Turn sound on">🔇</button>
+
+
+  <script src="images.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="leveldevil.js" defer></script>
+  <script src="dino_runner.js" defer></script>
+  <script src="script.js?v=3" defer></script>
+</body>
+
+</html>
